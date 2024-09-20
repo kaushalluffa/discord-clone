@@ -9,7 +9,13 @@ export async function DELETE(
   { params }: { params: { channelId: string } }
 ) {
   try {
-    const { profile } = await currentProfile();
+    const profileData = await currentProfile();
+
+    if (!profileData) {
+      return;
+    }
+
+    const { profile } = profileData;
     const { searchParams } = new URL(req.url);
 
     const serverId = searchParams.get("serverId");
@@ -62,7 +68,13 @@ export async function PATCH(
   { params }: { params: { channelId: string } }
 ) {
   try {
-    const { profile } = await currentProfile();
+    const profileData = await currentProfile();
+
+    if (!profileData) {
+      return;
+    }
+
+    const { profile, redirectToSignIn } = profileData;
     const { name, type } = await req.json();
     const { searchParams } = new URL(req.url);
 

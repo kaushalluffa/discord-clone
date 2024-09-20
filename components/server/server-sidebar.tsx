@@ -32,7 +32,13 @@ const roleIconMap = {
 };
 
 export const ServerSidebar = async ({ serverId }: ServerSidebarProps) => {
-  const {profile} = await currentProfile();
+  const profileData = await currentProfile();
+
+  if (!profileData) {
+    return redirect("/");
+  }
+
+  const { profile } = profileData;
 
   if (!profile) {
     return redirect("/");

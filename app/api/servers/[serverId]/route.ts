@@ -8,7 +8,13 @@ export async function DELETE(
   { params }: { params: { serverId: string } }
 ) {
   try {
-    const { profile } = await currentProfile();
+    const profileData = await currentProfile();
+
+    if (!profileData) {
+      return;
+    }
+
+    const { profile } = profileData;
 
     if (!profile) {
       return new NextResponse("Unauthorized", { status: 401 });
@@ -33,7 +39,13 @@ export async function PATCH(
   { params }: { params: { serverId: string } }
 ) {
   try {
-    const { profile } = await currentProfile();
+    const profileData = await currentProfile();
+
+    if (!profileData) {
+      return;
+    }
+
+    const { profile } = profileData;
     const { name, imageUrl } = await req.json();
 
     if (!profile) {

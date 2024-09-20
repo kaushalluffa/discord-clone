@@ -11,7 +11,13 @@ const ServerIdLayout = async ({
   children: React.ReactNode;
   params: { serverId: string };
 }) => {
-  const {profile,redirectToSignIn} = await currentProfile();
+  const profileData = await currentProfile();
+
+  if (!profileData) {
+    return redirect("/");
+  }
+
+  const { profile, redirectToSignIn } = profileData;
 
   if (!profile) {
     return redirectToSignIn();

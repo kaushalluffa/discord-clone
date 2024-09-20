@@ -10,7 +10,13 @@ interface ServerIdPageProps {
 }
 
 const ServerIdPage = async ({ params }: ServerIdPageProps) => {
-  const {profile,redirectToSignIn} = await currentProfile();
+  const profileData = await currentProfile();
+
+  if (!profileData) {
+    return redirect("/");
+  }
+
+  const { profile, redirectToSignIn } = profileData;
 
   if (!profile) {
     return redirectToSignIn();

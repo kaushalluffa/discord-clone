@@ -11,7 +11,13 @@ import { NavigationAction } from "./navigation-action";
 import { NavigationItem } from "./navigation-item";
 
 export const NavigationSidebar = async () => {
-  const { profile } = await currentProfile();
+  const profileData = await currentProfile();
+
+  if (!profileData) {
+    return redirect("/");
+  }
+
+  const { profile } = profileData;
 
   if (!profile) {
     return redirect("/");

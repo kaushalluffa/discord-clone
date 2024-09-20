@@ -6,7 +6,13 @@ import { db } from "@/lib/db";
 
 export async function POST(req: Request) {
   try {
-    const { profile } = await currentProfile();
+    const profileData = await currentProfile();
+
+    if (!profileData) {
+      return;
+    }
+
+    const { profile } = profileData;
     const { name, type } = await req.json();
     const { searchParams } = new URL(req.url);
 
