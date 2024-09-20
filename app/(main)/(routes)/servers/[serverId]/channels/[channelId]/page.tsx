@@ -1,4 +1,4 @@
-import { redirectToSignIn } from "@clerk/nextjs";
+
 import { redirect } from "next/navigation";
 import { ChannelType } from "@prisma/client";
 
@@ -13,13 +13,11 @@ interface ChannelIdPageProps {
   params: {
     serverId: string;
     channelId: string;
-  }
+  };
 }
 
-const ChannelIdPage = async ({
-  params
-}: ChannelIdPageProps) => {
-  const profile = await currentProfile();
+const ChannelIdPage = async ({ params }: ChannelIdPageProps) => {
+  const {profile,redirectToSignIn} = await currentProfile();
 
   if (!profile) {
     return redirectToSignIn();
@@ -34,15 +32,15 @@ const ChannelIdPage = async ({
   const member = await db.member.findFirst({
     where: {
       serverId: params.serverId,
-      profileId: profile.id,
-    }
+      profileId: profile?.id,
+    },
   });
 
   if (!channel || !member) {
     redirect("/");
   }
 
-  return ( 
+  return (
     <div className="bg-white dark:bg-[#313338] flex flex-col h-full">
       <ChatHeader
         name={channel.name}
@@ -77,21 +75,13 @@ const ChannelIdPage = async ({
         </>
       )}
       {channel.type === ChannelType.AUDIO && (
-        <MediaRoom
-          chatId={channel.id}
-          video={false}
-          audio={true}
-        />
+        <MediaRoom chatId={channel.id} video={false} audio={true} />
       )}
       {channel.type === ChannelType.VIDEO && (
-        <MediaRoom
-          chatId={channel.id}
-          video={true}
-          audio={true}
-        />
+        <MediaRoom chatId={channel.id} video={true} audio={true} />
       )}
     </div>
-   );
-}
- 
+  );
+};
+
 export default ChannelIdPage;

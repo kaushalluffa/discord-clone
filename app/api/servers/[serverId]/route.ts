@@ -8,7 +8,7 @@ export async function DELETE(
   { params }: { params: { serverId: string } }
 ) {
   try {
-    const profile = await currentProfile();
+    const { profile } = await currentProfile();
 
     if (!profile) {
       return new NextResponse("Unauthorized", { status: 401 });
@@ -17,8 +17,8 @@ export async function DELETE(
     const server = await db.server.delete({
       where: {
         id: params.serverId,
-        profileId: profile.id,
-      }
+        profileId: profile?.id,
+      },
     });
 
     return NextResponse.json(server);
@@ -33,7 +33,7 @@ export async function PATCH(
   { params }: { params: { serverId: string } }
 ) {
   try {
-    const profile = await currentProfile();
+    const { profile } = await currentProfile();
     const { name, imageUrl } = await req.json();
 
     if (!profile) {
@@ -43,12 +43,12 @@ export async function PATCH(
     const server = await db.server.update({
       where: {
         id: params.serverId,
-        profileId: profile.id,
+        profileId: profile?.id,
       },
       data: {
         name,
         imageUrl,
-      }
+      },
     });
 
     return NextResponse.json(server);

@@ -4,11 +4,9 @@ import { MemberRole } from "@prisma/client";
 import { currentProfile } from "@/lib/current-profile";
 import { db } from "@/lib/db";
 
-export async function POST(
-  req: Request
-) {
+export async function POST(req: Request) {
   try {
-    const profile = await currentProfile();
+    const { profile } = await currentProfile();
     const { name, type } = await req.json();
     const { searchParams } = new URL(req.url);
 
@@ -31,22 +29,22 @@ export async function POST(
         id: serverId,
         members: {
           some: {
-            profileId: profile.id,
+            profileId: profile?.id,
             role: {
-              in: [MemberRole.ADMIN, MemberRole.MODERATOR]
-            }
-          }
-        }
+              in: [MemberRole.ADMIN, MemberRole.MODERATOR],
+            },
+          },
+        },
       },
       data: {
         channels: {
           create: {
-            profileId: profile.id,
+            profileId: profile?.id,
             name,
             type,
-          }
-        }
-      }
+          },
+        },
+      },
     });
 
     return NextResponse.json(server);

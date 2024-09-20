@@ -1,9 +1,9 @@
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 
 import { db } from "@/lib/db";
 
 export const currentProfile = async () => {
-  const { userId } = auth();
+  const { userId, redirectToSignIn } = auth();
 
   if (!userId) {
     return null;
@@ -15,5 +15,5 @@ export const currentProfile = async () => {
     }
   });
 
-  return profile;
+  return { profile, redirectToSignIn };
 }

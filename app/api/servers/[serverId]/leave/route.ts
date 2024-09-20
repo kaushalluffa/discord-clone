@@ -8,7 +8,7 @@ export async function PATCH(
   { params }: { params: { serverId: string } }
 ) {
   try {
-    const profile = await currentProfile();
+    const { profile } = await currentProfile();
 
     if (!profile) {
       return new NextResponse("Unauthorized", { status: 401 });
@@ -22,21 +22,21 @@ export async function PATCH(
       where: {
         id: params.serverId,
         profileId: {
-          not: profile.id
+          not: profile?.id,
         },
         members: {
           some: {
-            profileId: profile.id
-          }
-        }
+            profileId: profile?.id,
+          },
+        },
       },
       data: {
         members: {
           deleteMany: {
-            profileId: profile.id
-          }
-        }
-      }
+            profileId: profile?.id,
+          },
+        },
+      },
     });
 
     return NextResponse.json(server);
